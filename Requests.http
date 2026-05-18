@@ -1,0 +1,298 @@
+@baseUrl = http://localhost:5278
+@token = techhive-token-123
+
+### Obtener todos los usuarios
+GET {{baseUrl}}/api/users
+Accept: application/json
+
+
+### Obtener todos los usuarios con paginación
+GET {{baseUrl}}/api/users?skip=0&take=10
+Accept: application/json
+
+
+### Prueba de paginación incorrecta: skip negativo
+GET {{baseUrl}}/api/users?skip=-1&take=10
+Accept: application/json
+
+
+### Prueba de paginación incorrecta: take demasiado alto
+GET {{baseUrl}}/api/users?skip=0&take=200
+Accept: application/json
+
+
+### Obtener usuario por ID
+GET {{baseUrl}}/api/users/1
+Accept: application/json
+
+
+### Obtener usuario que no existe
+GET {{baseUrl}}/api/users/999
+Accept: application/json
+
+
+### Crear nuevo usuario
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Laura Martín",
+  "email": "laura.martin@techhive.com",
+  "department": "Finance",
+  "role": "Finance Analyst"
+}
+
+
+### Crear otro usuario
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Miguel Sánchez",
+  "email": "miguel.sanchez@techhive.com",
+  "department": "IT",
+  "role": "Backend Developer"
+}
+
+
+### Actualizar usuario existente
+PUT {{baseUrl}}/api/users/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": 1,
+  "name": "Ana García Pérez",
+  "email": "ana.garcia@techhive.com",
+  "department": "RRHH",
+  "role": "HR Director"
+}
+
+
+### Intentar actualizar usuario que no existe
+PUT {{baseUrl}}/api/users/999
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": 999,
+  "name": "Usuario Inexistente",
+  "email": "noexiste@techhive.com",
+  "department": "IT",
+  "role": "Tester"
+}
+
+
+### Eliminar usuario
+DELETE {{baseUrl}}/api/users/2
+Accept: application/json
+
+
+### Comprobar usuario eliminado
+GET {{baseUrl}}/api/users/2
+Accept: application/json
+
+
+### Prueba de validación: email incorrecto
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Usuario Email Incorrecto",
+  "email": "correo-no-valido",
+  "department": "IT",
+  "role": "Tester"
+}
+
+
+### Prueba de validación: campo obligatorio vacío
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "",
+  "email": "usuario@techhive.com",
+  "department": "IT",
+  "role": "Tester"
+}
+
+
+### Prueba de validación: campos solo con espacios
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "   ",
+  "email": "usuario.espacios@techhive.com",
+  "department": "   ",
+  "role": "   "
+}
+
+
+### Prueba de conflicto: email duplicado
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Usuario Duplicado",
+  "email": "ana.garcia@techhive.com",
+  "department": "IT",
+  "role": "Support"
+}
+
+
+### Prueba de conflicto al actualizar: email de otro usuario
+PUT {{baseUrl}}/api/users/1
+Content-Type: application/json
+Accept: application/json
+
+{
+  "id": 1,
+  "name": "Ana García Pérez",
+  "email": "miguel.sanchez@techhive.com",
+  "department": "RRHH",
+  "role": "HR Director"
+}
+
+
+### Prueba de depuración: POST sin cuerpo
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Accept: application/json
+
+
+### Prueba de depuración: PUT sin cuerpo
+PUT {{baseUrl}}/api/users/1
+Content-Type: application/json
+Accept: application/json
+
+
+### Prueba de depuración: Content-Type incorrecto
+POST {{baseUrl}}/api/users
+Content-Type: text/plain
+Accept: application/json
+
+{
+  "name": "Usuario Texto",
+  "email": "usuario.texto@techhive.com",
+  "department": "IT",
+  "role": "Tester"
+}
+
+
+### Prueba de depuración: JSON mal formado
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Usuario JSON Mal",
+  "email": "jsonmal@techhive.com",
+  "department": "IT",
+  "role": "Tester", 
+}
+
+
+### Prueba de depuración: parámetro sospechoso en query
+GET {{baseUrl}}/api/users?input=%3Cscript%3Ealert%281%29%3C%2Fscript%3E
+Accept: application/json
+
+
+### Prueba de eliminación: usuario inexistente
+DELETE {{baseUrl}}/api/users/999
+Accept: application/json
+
+### Obtener usuarios con token válido
+GET {{baseUrl}}/api/users
+Accept: application/json
+Authorization: Bearer {{token}}
+
+
+### Obtener usuario por ID con token válido
+GET {{baseUrl}}/api/users/1
+Accept: application/json
+Authorization: Bearer {{token}}
+
+
+### Intentar acceder sin token
+GET {{baseUrl}}/api/users
+Accept: application/json
+
+
+### Intentar acceder con token incorrecto
+GET {{baseUrl}}/api/users
+Accept: application/json
+Authorization: Bearer token-incorrecto
+
+
+### Intentar acceder con formato de autorización incorrecto
+GET {{baseUrl}}/api/users
+Accept: application/json
+Authorization: {{token}}
+
+
+### Crear usuario con token válido
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Laura Martín",
+  "email": "laura.martin@techhive.com",
+  "department": "Finance",
+  "role": "Finance Analyst"
+}
+
+
+### Crear usuario sin token
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Usuario Sin Token",
+  "email": "sintoken@techhive.com",
+  "department": "IT",
+  "role": "Tester"
+}
+
+
+### Probar middleware de errores con token válido
+GET {{baseUrl}}/api/users/test-error
+Accept: application/json
+Authorization: Bearer {{token}}
+
+
+### Probar JSON mal formado con token válido
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Usuario JSON Mal",
+  "email": "jsonmal@techhive.com",
+  "department": "IT",
+  "role": "Tester",
+}
+
+
+### Probar email duplicado con token válido
+POST {{baseUrl}}/api/users
+Content-Type: application/json
+Accept: application/json
+Authorization: Bearer {{token}}
+
+{
+  "name": "Usuario Duplicado",
+  "email": "ana.garcia@techhive.com",
+  "department": "IT",
+  "role": "Support"
+}
